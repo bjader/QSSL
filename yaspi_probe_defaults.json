@@ -1,0 +1,19 @@
+{
+  "recipe": "arcus-probe-proc",
+  "partition": "htc-devel",
+  "time_limit": "00:10:00",
+  "gen_script_dir": "data/slurm-gen-scripts",
+  "ntasks_per_node": 1,
+  "log_dir": "data/slurm-logs",
+  "env_setup": "source activate /data/phys-tnt-library/kebl6296/.conda/.envs/QuantEnvHTC",
+  "mem": "",
+  "cpus_per_task": 4,
+  "gpus_per_task": 0,
+  "throttle_array": 8,
+  "ssh_forward": "",
+  "use_custom_ray_tmp_dir": false,
+  "refresh_logs": false,
+  "exclude": "",
+  "constraint_str": "",
+  "prep": ""
+}

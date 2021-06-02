@@ -1,0 +1,17 @@
+name: QSSLenv
+dependencies:
+  - python>=3.5
+  - pip>=19
+  - matplotlib
+  - rise
+  - opencv
+  - pytorch
+  - torchvision
+  - pip:
+      - qiskit
+      - torchsummary
+      - keras
+      - pylatexenc
+      - pillow
+      - watchlogs
+      - torchsummary
