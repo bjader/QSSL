@@ -21,7 +21,7 @@ Optional arguments:
 
 ### Self-supervised Training with Quantum Representation Network
 
-**NOTE** You must clone [quantum-neural-network](https://gitlab.physics.ox.ac.uk/jaderberg/quantum-neural-network) and
+**NOTE** You must clone [quantum-neural-network](https://github.com/bjader/quantum-neural-network) and
 add it to your sys/python path first.
 
 ```
