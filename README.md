@@ -55,3 +55,10 @@ in Fig. 5 of [Quantum Self-Supervised Learning](https://arxiv.org/pdf/2103.14653
 ![image](https://user-images.githubusercontent.com/14994219/120349125-bf77af00-c2f5-11eb-957e-853c9e5e9f53.png)
 
 Producing the orange line can be done by changing `--q_backend qasm_simulator` to `--q_backend statevector_simulator`.
+
+## Usage and citation
+
+We kindly ask any publication, whitepaper or project using this code to cite:
+```
+Jaderberg, B., Anderson, L.W., Xie, W., Albanie, S., Kiffner, M. and Jaksch, D., 2021. Quantum Self-Supervised Learning. arXiv preprint arXiv:2103.14653.
+```
