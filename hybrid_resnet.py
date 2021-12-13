@@ -2,7 +2,7 @@ import sys
 
 from torchvision.models.resnet import Bottleneck, conv1x1, conv3x3
 
-sys.path.append("../quantum-neural-network/quantum-neural-network")
+sys.path.append("../quantum-neural-network/qnn")
 
 import torch
 import torch.nn as nn

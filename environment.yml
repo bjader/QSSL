@@ -14,4 +14,3 @@ dependencies:
       - pylatexenc
       - pillow
       - watchlogs
-      - torchsummary
