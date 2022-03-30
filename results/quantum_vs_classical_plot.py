@@ -2,6 +2,7 @@ import time
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
 
 import results.classical_8width as classical
 import results.quantum_8width as quantum
@@ -75,9 +76,13 @@ next(ax._get_lines.prop_cycler)['color']
 plt.xlabel('Training batches')
 plt.ylabel('Accuracy ($\%$)')
 plt.ylim(27, 48)
-# plt.xlim(0, 97)
+plt.xlim(-5, 180)
 ax.tick_params(axis='both', which='major')
+
+ax.xaxis.set_minor_locator(AutoMinorLocator())
+ax.yaxis.set_minor_locator(AutoMinorLocator())
+ax.tick_params(which='both', direction='in', top=True, bottom=True, left=True, right=True)
 plt.grid(alpha=0.5)
-plt.legend(title='Repr. Network', loc=4)
-plt.savefig('figures/{}.pdf'.format(time.time()), dpi=3000, bbox_inches='tight')
-# plt.show()
+plt.legend(title='Repr. Network', loc=4, fancybox=False)
+# plt.savefig('figures/quantum_vs_classical.pdf', dpi=3000, bbox_inches='tight')
+plt.show()

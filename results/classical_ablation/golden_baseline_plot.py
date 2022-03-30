@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.ticker import AutoMinorLocator
 
 import results.classical_ablation.classical_epochsize_data as classical_epochsize
 import results.classical_ablation.classical_width_data as classical_width
@@ -40,9 +41,17 @@ colors = []
 for i, width_results in enumerate(accs1):
     unzipped = [list(zip(*run)) for run in width_results]
 
-    plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped[0][1]]) + 1,
-                 np.mean([run[0] for run in unzipped], 0), np.std([run[0] for run in unzipped], 0), fmt="--x",
-                 markersize=10, mew=2, label="Width={}".format(widths[i]))
+    unzipped_epoch_only = []
+
+    for [accs, epoch_batches] in unzipped:
+        reduced_accs = [acc for (acc, epoch_batch) in zip(accs, epoch_batches) if epoch_batch[1] == 0]
+        reduced_epoch_batches = [epoch_batch for (acc, epoch_batch) in zip(accs, epoch_batches) if epoch_batch[1] == 0]
+        unzipped_epoch_only.append([reduced_accs, reduced_epoch_batches])
+
+    plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped_epoch_only[0][1]]) + 1,
+                 np.mean([run[0] for run in unzipped_epoch_only], 0),
+                 np.std([run[0] for run in unzipped_epoch_only], 0), fmt="--x",
+                 markersize=10, mew=2, label="$W = " + str(format(widths[i])) + "$")
 
 # for i, epoch_results in enumerate(accs3):
 #     unzipped = list(zip(*epoch_results))
@@ -56,10 +65,12 @@ for i, width_results in enumerate(accs1):
 plt.xlabel('Number of training batches')
 plt.ylabel('Accuracy ($\%$)')
 ax.tick_params(axis='both', which='major')
-# plt.ylim(25, 55)
-# plt.xlim(0, 100)
-plt.legend()
+
+ax.xaxis.set_minor_locator(AutoMinorLocator())
+ax.yaxis.set_minor_locator(AutoMinorLocator())
+ax.tick_params(which='both', direction='in', top=True, bottom=True, left=True, right=True)
+plt.legend(fancybox=False)
 plt.grid(alpha=0.5)
 # plt.title('Without Batchnorm')
-# plt.savefig('figures/{}.pdf'.format(time.time()), dpi=3000, bbox_inches='tight')
+# plt.savefig('../figures/classical_ablation.pdf', dpi=3000, bbox_inches='tight')
 plt.show()
