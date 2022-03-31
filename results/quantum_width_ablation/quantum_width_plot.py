@@ -6,11 +6,14 @@ from matplotlib.ticker import AutoMinorLocator
 
 import results.quantum_width_ablation.quantum_width_data as quantum_width
 import results.classical_ablation.classical_width_data as classical_width
+import results.classical_8width as classical
 from results.quantum_8width import results_sim_circ_14_half_null_AF_statevector
 
 logging.basicConfig(level=logging.INFO)
 
 quantum_widths, quantum_accs1 = quantum_width.results()
+
+classical_8width = classical.results_sigmoid_bounded_fixed_2()
 
 classical_widths, classical_accs1 = classical_width.results_updated_nobatchnorm()
 
@@ -36,10 +39,11 @@ ax = plt.subplot(111)
 colors = []
 
 colours = {"2": 'tab:blue', "4": 'tab:orange', "6": 'tab:green', "8": 'tab:red'}
+width_to_plot = 8
 
 for i, width_results in enumerate(quantum_accs1):
 
-    if quantum_widths[i] in [2, 4, 6, 8]:
+    if quantum_widths[i] in [2,4,6,8]:
         unzipped = [list(zip(*run)) for run in width_results]
 
         completed_data_points = min([len(run[0]) for run in unzipped])
@@ -47,13 +51,16 @@ for i, width_results in enumerate(quantum_accs1):
         plt.errorbar(
             np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped[0][1][:completed_data_points]]) + 1,
             np.nanmean([run[0][:completed_data_points] for run in unzipped], 0),
-            np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="-o",
+            np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="--o",
             markersize=4, mew=2, color=colours[str(quantum_widths[i])])
 
         plt.plot([], '-', color=colours[str(quantum_widths[i])], label=r"$W =" + str(quantum_widths[i]) + "$")
 
 for i, width_results in enumerate(classical_accs1):
-    if classical_widths[i] in [2, 4, 6, 8]:
+    if classical_widths[i] in [2,4,6,8]:
+        # if width_to_plot == 8:
+        #     unzipped = [list(zip(*run)) for run in classical_8width]
+        # else:
         unzipped = [list(zip(*run)) for run in width_results]
 
         completed_data_points = min([len(run[0]) for run in unzipped])
@@ -63,6 +70,8 @@ for i, width_results in enumerate(classical_accs1):
             np.nanmean([run[0][:completed_data_points] for run in unzipped], 0),
             np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="x--",
             markersize=8, mew=2, color=colours[str(classical_widths[i])])
+
+
 
 plt.xlabel('Number of training batches')
 plt.ylabel('Accuracy ($\%$)')
