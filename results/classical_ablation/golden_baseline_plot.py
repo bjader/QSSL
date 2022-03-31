@@ -39,19 +39,20 @@ colors = []
 #     colors.append(color)
 
 for i, width_results in enumerate(accs1):
-    unzipped = [list(zip(*run)) for run in width_results]
+    if widths[i] != 6:
+        unzipped = [list(zip(*run)) for run in width_results]
 
-    unzipped_epoch_only = []
+        unzipped_epoch_only = []
 
-    for [accs, epoch_batches] in unzipped:
-        reduced_accs = [acc for (acc, epoch_batch) in zip(accs, epoch_batches) if epoch_batch[1] == 0]
-        reduced_epoch_batches = [epoch_batch for (acc, epoch_batch) in zip(accs, epoch_batches) if epoch_batch[1] == 0]
-        unzipped_epoch_only.append([reduced_accs, reduced_epoch_batches])
+        for [accs, epoch_batches] in unzipped:
+            reduced_accs = [acc for (acc, epoch_batch) in zip(accs, epoch_batches) if epoch_batch[1] == 0]
+            reduced_epoch_batches = [epoch_batch for (acc, epoch_batch) in zip(accs, epoch_batches) if epoch_batch[1] == 0]
+            unzipped_epoch_only.append([reduced_accs, reduced_epoch_batches])
 
-    plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped_epoch_only[0][1]]) + 1,
-                 np.mean([run[0] for run in unzipped_epoch_only], 0),
-                 np.std([run[0] for run in unzipped_epoch_only], 0), fmt="--x",
-                 markersize=10, mew=2, label="$W = " + str(format(widths[i])) + "$")
+        plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped_epoch_only[0][1]]) + 1,
+                     np.mean([run[0] for run in unzipped_epoch_only], 0),
+                     np.std([run[0] for run in unzipped_epoch_only], 0), fmt="--x",
+                     markersize=10, mew=2, label="$W = " + str(format(widths[i])) + "$", capsize=2)
 
 # for i, epoch_results in enumerate(accs3):
 #     unzipped = list(zip(*epoch_results))
@@ -62,7 +63,7 @@ for i, width_results in enumerate(accs1):
 
 # plt.plot(np.array(baseline.results()[0])+1, baseline.results()[1], "--x", markersize=10, mew=2, label="Baseline")
 
-plt.xlabel('Number of training batches')
+plt.xlabel('Training batches')
 plt.ylabel('Accuracy ($\%$)')
 ax.tick_params(axis='both', which='major')
 
@@ -72,5 +73,5 @@ ax.tick_params(which='both', direction='in', top=True, bottom=True, left=True, r
 plt.legend(fancybox=False)
 plt.grid(alpha=0.5)
 # plt.title('Without Batchnorm')
-# plt.savefig('../figures/classical_ablation.pdf', dpi=3000, bbox_inches='tight')
+plt.savefig('../figures/classical_ablation.pdf', dpi=3000, bbox_inches='tight')
 plt.show()

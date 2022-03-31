@@ -53,25 +53,25 @@ print(c1_accs[-1], c1_std[-1])
 
 plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in q1_unzipped[0][1]]) + 1,
              q1_accs, q1_std, fmt="--o",
-             markersize=4, mew=2, label='Quantum, ring ansatz', capsize=2, alpha=1.0)
+             markersize=4, mew=2, label='Quantum', capsize=2, alpha=1.0)
 print(q1_accs[-1], q1_std[-1])
 
-plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in q2_unzipped[0][1][:-1]]) + 1,
-             q2_accs, q2_std, fmt="--o",
-             markersize=4, mew=2, label='Quantum, all-to-all ansatz', capsize=2)
-print(q2_accs[-1], q2_std[-1])
+# plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in q2_unzipped[0][1][:-1]]) + 1,
+#              q2_accs, q2_std, fmt="--o",
+#              markersize=4, mew=2, label='Quantum, all-to-all ansatz', capsize=2)
+# print(q2_accs[-1], q2_std[-1])
 
 next(ax._get_lines.prop_cycler)['color']
 next(ax._get_lines.prop_cycler)['color']
 
-# q3_accs = np.mean([run[0][:-1] for run in q3_unzipped], 0)
-# q3_std = np.std([run[0][:-1] for run in q3_unzipped], 0)
-# plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in q3_unzipped[0][1][:-1]]) + 1,
-#              q3_accs, q3_std, fmt="--o",
-#              markersize=4, mew=2, label='Quantum, 100 shots', capsize=2)
-# print(q3_accs[-1], q3_std[-1])
+q3_accs = np.mean([run[0][:-1] for run in q3_unzipped], 0)
+q3_std = np.std([run[0][:-1] for run in q3_unzipped], 0)
+plt.errorbar(np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in q3_unzipped[0][1][:-1]]) + 1,
+             q3_accs, q3_std, fmt="--o",
+             markersize=4, mew=2, label='Quantum, 100 shots', capsize=2)
+print(q3_accs[-1], q3_std[-1])
 
-# print(np.mean(q3_std))
+print(np.mean(q3_std))
 
 plt.xlabel('Training batches')
 plt.ylabel('Accuracy ($\%$)')
@@ -84,5 +84,5 @@ ax.yaxis.set_minor_locator(AutoMinorLocator())
 ax.tick_params(which='both', direction='in', top=True, bottom=True, left=True, right=True)
 plt.grid(alpha=0.5)
 plt.legend(title='Repr. Network', loc=4, fancybox=False)
-# plt.savefig('figures/quantum_vs_classical.pdf', dpi=3000, bbox_inches='tight')
+plt.savefig('figures/main_result.pdf', dpi=3000, bbox_inches='tight')
 plt.show()

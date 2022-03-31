@@ -35,52 +35,60 @@ tex_fonts = {
 
 plt.rcParams.update(tex_fonts)
 
-ax = plt.subplot(111)
+fig, [[w2_ax, w4_ax], [w6_ax, w8_ax]] = plt.subplots(2, 2, sharex=True, sharey=True)
 colors = []
 
-colours = {"2": 'tab:blue', "4": 'tab:orange', "6": 'tab:green', "8": 'tab:red'}
-width_to_plot = 8
+colours = {"2": 'tab:blue', "4": 'tab:orange', "6": 'tab:red', "8": 'tab:green'}
 
-for i, width_results in enumerate(quantum_accs1):
+for ax, width_to_plot in zip([w2_ax, w4_ax, w6_ax, w8_ax], [2, 4, 6, 8]):
 
-    if quantum_widths[i] in [2,4,6,8]:
-        unzipped = [list(zip(*run)) for run in width_results]
+    for i, width_results in enumerate(quantum_accs1):
 
-        completed_data_points = min([len(run[0]) for run in unzipped])
+        if quantum_widths[i] == width_to_plot:
+            unzipped = [list(zip(*run)) for run in width_results]
 
-        plt.errorbar(
-            np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped[0][1][:completed_data_points]]) + 1,
-            np.nanmean([run[0][:completed_data_points] for run in unzipped], 0),
-            np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="--o",
-            markersize=4, mew=2, color=colours[str(quantum_widths[i])])
+            completed_data_points = min([len(run[0]) for run in unzipped])
 
-        plt.plot([], '-', color=colours[str(quantum_widths[i])], label=r"$W =" + str(quantum_widths[i]) + "$")
+            ax.errorbar(
+                np.array(
+                    [checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped[0][1][:completed_data_points]]) + 1,
+                np.nanmean([run[0][:completed_data_points] for run in unzipped], 0),
+                np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="--o",
+                markersize=4, mew=2, color=colours[str(quantum_widths[i])], capsize=2)
 
-for i, width_results in enumerate(classical_accs1):
-    if classical_widths[i] in [2,4,6,8]:
-        # if width_to_plot == 8:
-        #     unzipped = [list(zip(*run)) for run in classical_8width]
-        # else:
-        unzipped = [list(zip(*run)) for run in width_results]
+            ax.plot([], 'o--', color=colours[str(quantum_widths[i])], label="Quantum")
 
-        completed_data_points = min([len(run[0]) for run in unzipped])
+    for i, width_results in enumerate(classical_accs1):
+        if classical_widths[i] == width_to_plot:
+            if width_to_plot == 8:
+                unzipped = [list(zip(*run)) for run in classical_8width]
+            else:
+                unzipped = [list(zip(*run)) for run in width_results]
 
-        plt.errorbar(
-            np.array([checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped[0][1][:completed_data_points]]) + 1,
-            np.nanmean([run[0][:completed_data_points] for run in unzipped], 0),
-            np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="x--",
-            markersize=8, mew=2, color=colours[str(classical_widths[i])])
+            completed_data_points = min([len(run[0]) for run in unzipped])
 
+            ax.errorbar(
+                np.array(
+                    [checkpoint[0] * 97 + checkpoint[1] for checkpoint in unzipped[0][1][:completed_data_points]]) + 1,
+                np.nanmean([run[0][:completed_data_points] for run in unzipped], 0),
+                np.nanstd([run[0][:completed_data_points] for run in unzipped], 0), fmt="x--",
+                markersize=8, mew=2, color=colours[str(classical_widths[i])], capsize=2)
+            ax.plot([], 'x--', color=colours[str(classical_widths[i])], label="Classical")
 
+    ax.set_xlim(-5, 180)
+    # ax.set_ylim(18, 52)
+    ax.xaxis.set_minor_locator(AutoMinorLocator())
+    ax.yaxis.set_minor_locator(AutoMinorLocator())
+    ax.tick_params(which='both', direction='in', top=True, bottom=True, left=True, right=True)
+    ax.grid(alpha=0.5)
 
-plt.xlabel('Number of training batches')
-plt.ylabel('Accuracy ($\%$)')
-ax.set_xlim(-5, 180)
-ax.set_ylim(19, 48)
-ax.xaxis.set_minor_locator(AutoMinorLocator())
-ax.yaxis.set_minor_locator(AutoMinorLocator())
-ax.tick_params(which='both', direction='in', top=True, bottom=True, left=True, right=True)
-ax.legend(fancybox=False, loc="lower right")
-plt.grid(alpha=0.5)
-# plt.savefig('../figures/quantum_classical_ablation.pdf', dpi=3000, bbox_inches='tight')
+w2_ax.legend(fancybox=False, loc="upper right", title=r"$W=2$")
+w4_ax.legend(fancybox=False, loc="upper right", title=r"$W=4$")
+w6_ax.legend(fancybox=False, loc="lower right", title=r"$W=6$")
+w8_ax.legend(fancybox=False, loc="lower right", title=r"$W=8$")
+
+fig.supxlabel('Training batches')
+fig.supylabel('Accuracy ($\%$)')
+fig.subplots_adjust(wspace=0.05, hspace=0.05)
+plt.savefig('../figures/quantum_classical_ablation.pdf', dpi=3000, bbox_inches='tight')
 plt.show()
